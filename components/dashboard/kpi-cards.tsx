@@ -45,7 +45,7 @@ export function KPICards({ analysis, isLoading }: KPICardsProps) {
   const kpis = [
     {
       title: 'Total Incidents',
-      value: analysis?.summary.totalIncidents || 0,
+      value: analysis?.summary?.totalIncidents || 0,
       icon: AlertTriangle,
       color: 'text-orange-400',
       bgColor: 'bg-orange-400/10',
@@ -53,7 +53,7 @@ export function KPICards({ analysis, isLoading }: KPICardsProps) {
     },
     {
       title: 'Total Injuries',
-      value: analysis?.summary.totalInjuries || 0,
+      value: analysis?.summary?.totalInjuries || 0,
       icon: Users,
       color: 'text-red-400',
       bgColor: 'bg-red-400/10',
@@ -61,7 +61,7 @@ export function KPICards({ analysis, isLoading }: KPICardsProps) {
     },
     {
       title: 'Work Days Lost',
-      value: analysis?.summary.totalWorkDaysLost || 0,
+      value: analysis?.summary?.totalWorkDaysLost || 0,
       icon: Clock,
       color: 'text-yellow-400',
       bgColor: 'bg-yellow-400/10',
@@ -69,7 +69,7 @@ export function KPICards({ analysis, isLoading }: KPICardsProps) {
     },
     {
       title: 'Safety Score',
-      value: analysis?.summary.safetyScore || 0,
+      value: analysis?.summary?.safetyScore || 0,
       icon: Shield,
       color: 'text-blue-400',
       bgColor: 'bg-blue-400/10',
@@ -81,7 +81,7 @@ export function KPICards({ analysis, isLoading }: KPICardsProps) {
   const economicKpis = [
     {
       title: 'Lives Saved',
-      value: analysis?.summary.livesSaved || 0,
+      value: analysis?.summary?.livesSaved || 0,
       icon: Heart,
       color: 'text-emerald-400',
       bgColor: 'bg-emerald-400/10',
@@ -90,7 +90,7 @@ export function KPICards({ analysis, isLoading }: KPICardsProps) {
     },
     {
       title: 'Money Saved',
-      value: analysis?.summary.moneySavedTenge || 0,
+      value: analysis?.summary?.moneySavedTenge || 0,
       icon: DollarSign,
       color: 'text-emerald-400',
       bgColor: 'bg-emerald-400/10',
@@ -99,7 +99,7 @@ export function KPICards({ analysis, isLoading }: KPICardsProps) {
     },
     {
       title: 'Total Cost',
-      value: analysis?.summary.totalCostTenge || 0,
+      value: analysis?.summary?.totalCostTenge || 0,
       icon: TrendingDown,
       color: 'text-red-400',
       bgColor: 'bg-red-400/10',
@@ -108,10 +108,10 @@ export function KPICards({ analysis, isLoading }: KPICardsProps) {
     },
     {
       title: 'Fatalities',
-      value: analysis?.summary.totalFatalities || 0,
+      value: analysis?.summary?.totalFatalities || 0,
       icon: FileText,
-      color: analysis?.summary.totalFatalities ? 'text-red-500' : 'text-emerald-400',
-      bgColor: analysis?.summary.totalFatalities ? 'bg-red-500/10' : 'bg-emerald-400/10',
+      color: analysis?.summary?.totalFatalities ? 'text-red-500' : 'text-emerald-400',
+      bgColor: analysis?.summary?.totalFatalities ? 'bg-red-500/10' : 'bg-emerald-400/10',
       format: formatNumber,
       description: 'Total recorded fatalities',
     },

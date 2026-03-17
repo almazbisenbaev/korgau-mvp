@@ -82,7 +82,7 @@ export function Predictions({ analysis, isLoading }: PredictionsProps) {
                     <span className="text-sm text-muted-foreground">predicted incidents</span>
                   </div>
                   <div className="mt-2 text-sm text-muted-foreground">
-                    95% CI: {period.data?.confidenceInterval.low || 0} - {period.data?.confidenceInterval.high || 0}
+                    95% CI: {period.data?.confidenceInterval?.low || 0} - {period.data?.confidenceInterval?.high || 0}
                   </div>
                 </div>
               ))}

@@ -1,5 +1,10 @@
 import { generateText, Output } from 'ai'
+import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { z } from 'zod'
+
+const google = createGoogleGenerativeAI({
+  apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
+})
 import { getIncidents, getKorgauCards, getIncidentStats, getKorgauStats } from '@/lib/db'
 
 const analysisSchema = z.object({
@@ -116,7 +121,7 @@ Current statistics:
 - Open safety cards: ${korgauStats.openCards}`
 
     const { output } = await generateText({
-      model: 'google/gemini-2.0-flash',
+      model: google('gemini-2.0-flash'),
       output: Output.object({ schema: analysisSchema }),
       system: systemPrompt,
       prompt: `Analyze this HSE safety data and provide comprehensive analysis:

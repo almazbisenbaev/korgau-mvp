@@ -161,7 +161,7 @@ export function IncidentCharts({ analysis, incidentStats, isLoading }: IncidentC
                 <div
                   key={i}
                   className="w-full animate-pulse rounded-t bg-muted"
-                  style={{ height: `${Math.random() * 200 + 50}px` }}
+                  style={{ height: `${50 + (i * 15) % 150}px` }}
                 />
               ))}
             </div>
