@@ -121,7 +121,7 @@ Current statistics:
 - Open safety cards: ${korgauStats.openCards}`
 
     const { output } = await generateText({
-      model: google('gemini-2.0-flash'),
+      model: google('gemini-3.1-flash-lite-preview'),
       output: Output.object({ schema: analysisSchema }),
       system: systemPrompt,
       prompt: `Analyze this HSE safety data and provide comprehensive analysis:
