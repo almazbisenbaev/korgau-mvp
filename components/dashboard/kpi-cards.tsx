@@ -44,7 +44,7 @@ function formatCurrency(amount: number): string {
 export function KPICards({ analysis, isLoading }: KPICardsProps) {
   const kpis = [
     {
-      title: 'Total Incidents',
+      title: 'Всего инцидентов',
       value: analysis?.summary?.totalIncidents || 0,
       icon: AlertTriangle,
       color: 'text-orange-600',
@@ -52,7 +52,7 @@ export function KPICards({ analysis, isLoading }: KPICardsProps) {
       format: formatNumber,
     },
     {
-      title: 'Total Injuries',
+      title: 'Всего травм',
       value: analysis?.summary?.totalInjuries || 0,
       icon: Users,
       color: 'text-red-600',
@@ -60,7 +60,7 @@ export function KPICards({ analysis, isLoading }: KPICardsProps) {
       format: formatNumber,
     },
     {
-      title: 'Work Days Lost',
+      title: 'Потерянные дни',
       value: analysis?.summary?.totalWorkDaysLost || 0,
       icon: Clock,
       color: 'text-amber-600',
@@ -68,7 +68,7 @@ export function KPICards({ analysis, isLoading }: KPICardsProps) {
       format: formatNumber,
     },
     {
-      title: 'Safety Score',
+      title: 'Счет безопасности',
       value: analysis?.summary?.safetyScore || 0,
       icon: Shield,
       color: 'text-blue-600',
@@ -80,40 +80,40 @@ export function KPICards({ analysis, isLoading }: KPICardsProps) {
 
   const economicKpis = [
     {
-      title: 'Lives Saved',
+      title: 'Спасенные жизни',
       value: analysis?.summary?.livesSaved || 0,
       icon: Heart,
       color: 'text-emerald-600',
       bgColor: 'bg-emerald-50',
       format: formatNumber,
-      description: 'Through safety interventions',
+      description: 'Через меры безопасности',
     },
     {
-      title: 'Money Saved',
+      title: 'Сэкономлено средств',
       value: analysis?.summary?.moneySavedTenge || 0,
       icon: DollarSign,
       color: 'text-emerald-600',
       bgColor: 'bg-emerald-50',
       format: formatCurrency,
-      description: 'From prevented incidents',
+      description: 'От предотвращенных инцидентов',
     },
     {
-      title: 'Total Cost',
+      title: 'Общий ущерб',
       value: analysis?.summary?.totalCostTenge || 0,
       icon: TrendingDown,
       color: 'text-red-600',
       bgColor: 'bg-red-50',
       format: formatCurrency,
-      description: 'From recorded incidents',
+      description: 'От зафиксированных инцидентов',
     },
     {
-      title: 'Fatalities',
+      title: 'Смертельные случаи',
       value: analysis?.summary?.totalFatalities || 0,
       icon: FileText,
       color: analysis?.summary?.totalFatalities ? 'text-red-600' : 'text-emerald-600',
       bgColor: analysis?.summary?.totalFatalities ? 'bg-red-50' : 'bg-emerald-50',
       format: formatNumber,
-      description: 'Total recorded fatalities',
+      description: 'Всего зафиксировано',
     },
   ]
 

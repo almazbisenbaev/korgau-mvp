@@ -59,7 +59,7 @@ export default function DashboardContent() {
             className="gap-2 h-8"
           >
             <Sparkles className="h-3.5 w-3.5" />
-            {isLoading ? 'Analyzing...' : 'Refresh Insights'}
+            {isLoading ? 'Анализ...' : 'Обновить данные'}
           </Button>
         </div>
       </header>
@@ -67,8 +67,8 @@ export default function DashboardContent() {
       {/* Main Content */}
       <main className="mx-auto max-w-[1600px] px-4 py-8 lg:px-8">
         <div className="mb-8 flex flex-col gap-1">
-          <h2 className="text-2xl font-bold tracking-tight">Safety Overview</h2>
-          <p className="text-sm text-muted-foreground">Monitor and analyze safety performance across all operations.</p>
+          <h2 className="text-2xl font-bold tracking-tight">Обзор безопасности</h2>
+          <p className="text-sm text-muted-foreground">Мониторинг и анализ показателей безопасности во всех операциях.</p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
@@ -78,25 +78,25 @@ export default function DashboardContent() {
                 value="overview" 
                 className="relative h-9 rounded-none border-b-2 border-transparent bg-transparent px-1 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
               >
-                Overview
+                Обзор
               </TabsTrigger>
               <TabsTrigger 
                 value="predictions"
                 className="relative h-9 rounded-none border-b-2 border-transparent bg-transparent px-1 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
               >
-                Predictions
+                Прогнозы
               </TabsTrigger>
               <TabsTrigger 
                 value="recommendations"
                 className="relative h-9 rounded-none border-b-2 border-transparent bg-transparent px-1 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
               >
-                AI Insights
+                Рекомендации ИИ
               </TabsTrigger>
               <TabsTrigger 
                 value="alerts"
                 className="relative h-9 rounded-none border-b-2 border-transparent bg-transparent px-1 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
               >
-                Safety Alerts
+                Уведомления
               </TabsTrigger>
             </TabsList>
             

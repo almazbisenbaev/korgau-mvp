@@ -39,6 +39,13 @@ const SEVERITY_COLORS: Record<string, string> = {
   low: '#16a34a',
 }
 
+const SEVERITY_LABELS: Record<string, string> = {
+  critical: 'Критическая',
+  high: 'Высокая',
+  medium: 'Средняя',
+  low: 'Низкая',
+}
+
 export function IncidentCharts({ analysis, incidentStats, isLoading }: IncidentChartsProps) {
   const typeData = incidentStats?.incidentsByType?.map((item) => ({
     name: item.incident_type,
@@ -57,7 +64,7 @@ export function IncidentCharts({ analysis, incidentStats, isLoading }: IncidentC
   })) || []
 
   const severityData = incidentStats?.incidentsBySeverity?.map((item) => ({
-    name: item.severity.charAt(0).toUpperCase() + item.severity.slice(1),
+    name: SEVERITY_LABELS[item.severity] || item.severity,
     value: Number(item.count),
     color: SEVERITY_COLORS[item.severity] || '#2563eb',
   })) || []
@@ -72,7 +79,7 @@ export function IncidentCharts({ analysis, incidentStats, isLoading }: IncidentC
     <div className="grid gap-6 md:grid-cols-2">
       <Card className="border-border bg-card shadow-sm">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Incidents by Type</CardTitle>
+          <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Инциденты по типам</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -113,7 +120,7 @@ export function IncidentCharts({ analysis, incidentStats, isLoading }: IncidentC
 
       <Card className="border-border bg-card shadow-sm">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Top Organizations</CardTitle>
+          <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Топ организаций</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -147,7 +154,7 @@ export function IncidentCharts({ analysis, incidentStats, isLoading }: IncidentC
 
       <Card className="border-border bg-card shadow-sm md:col-span-2">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Incident Trend & AI Prediction</CardTitle>
+          <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Тренд инцидентов и ИИ прогноз</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -190,7 +197,7 @@ export function IncidentCharts({ analysis, incidentStats, isLoading }: IncidentC
                   strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#colorActual)"
-                  name="Actual Incidents"
+                  name="Фактические инциденты"
                 />
                 <Area
                   type="monotone"
@@ -200,7 +207,7 @@ export function IncidentCharts({ analysis, incidentStats, isLoading }: IncidentC
                   strokeDasharray="5 5"
                   fillOpacity={1}
                   fill="url(#colorPredicted)"
-                  name="AI Prediction"
+                  name="ИИ Прогноз"
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -210,7 +217,7 @@ export function IncidentCharts({ analysis, incidentStats, isLoading }: IncidentC
 
       <Card className="border-border/50 bg-card/50 backdrop-blur">
         <CardHeader>
-          <CardTitle className="text-lg text-foreground">Incidents by Severity</CardTitle>
+          <CardTitle className="text-lg text-foreground">Инциденты по степени тяжести</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (

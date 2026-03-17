@@ -33,14 +33,25 @@ function getTrendColor(trend: string) {
   }
 }
 
+function getTrendLabel(trend: string) {
+  switch (trend) {
+    case 'increasing':
+      return 'Рост'
+    case 'decreasing':
+      return 'Снижение'
+    default:
+      return 'Стабильно'
+  }
+}
+
 export function Predictions({ analysis, isLoading }: PredictionsProps) {
   const forecasts = analysis?.forecasts
   const riskZones = analysis?.topRiskZones || []
 
   const forecastPeriods = [
-    { label: 'Next 3 Months', data: forecasts?.threeMonths },
-    { label: 'Next 6 Months', data: forecasts?.sixMonths },
-    { label: 'Next 12 Months', data: forecasts?.twelveMonths },
+    { label: 'Следующие 3 месяца', data: forecasts?.threeMonths },
+    { label: 'Следующие 6 месяцев', data: forecasts?.sixMonths },
+    { label: 'Следующие 12 месяцев', data: forecasts?.twelveMonths },
   ]
 
   return (
@@ -49,7 +60,7 @@ export function Predictions({ analysis, isLoading }: PredictionsProps) {
         <CardHeader className="pb-4">
           <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
             <Target className="h-4 w-4 text-primary" />
-            Incident Forecasts
+            Прогнозы инцидентов
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -73,20 +84,20 @@ export function Predictions({ analysis, isLoading }: PredictionsProps) {
                         <span className="text-3xl font-bold tracking-tight text-foreground">
                           {period.data?.predictedIncidents || 0}
                         </span>
-                        <span className="text-xs font-medium text-muted-foreground">INCIDENTS</span>
+                        <span className="text-xs font-medium text-muted-foreground uppercase">инцидентов</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5 rounded-full bg-muted/50 px-2.5 py-1">
                       {getTrendIcon(period.data?.trend || 'stable')}
                       <span className={`text-xs font-bold uppercase tracking-wider ${getTrendColor(period.data?.trend || 'stable')}`}>
-                        {period.data?.trend || 'stable'}
+                        {getTrendLabel(period.data?.trend || 'stable')}
                       </span>
                     </div>
                   </div>
                   <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
                     <div className="flex items-center gap-1.5">
                       <div className="h-1.5 w-1.5 rounded-full bg-primary/40" />
-                      <span>95% Confidence Interval: {period.data?.confidenceInterval?.low || 0} — {period.data?.confidenceInterval?.high || 0}</span>
+                      <span>95% доверительный интервал: {period.data?.confidenceInterval?.low || 0} — {period.data?.confidenceInterval?.high || 0}</span>
                     </div>
                   </div>
                 </div>
@@ -100,7 +111,7 @@ export function Predictions({ analysis, isLoading }: PredictionsProps) {
         <CardHeader className="pb-4">
           <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
             <MapPin className="h-4 w-4 text-red-600" />
-            Top 5 Risk Zones
+            Топ-5 зон риска
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -124,15 +135,15 @@ export function Predictions({ analysis, isLoading }: PredictionsProps) {
                       </span>
                       <h4 className="font-semibold text-foreground">{zone.organization}</h4>
                     </div>
-                    <Badge variant="outline" className="bg-red-50 text-red-700 border-red-100 font-bold">
-                      {zone.riskScore}% RISK
+                    <Badge variant="outline" className="bg-red-50 text-red-700 border-red-100 font-bold uppercase">
+                      РИСК {zone.riskScore}%
                     </Badge>
                   </div>
                   
                   <div className="space-y-3">
                     <div className="space-y-1.5">
                       <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                        <span>Incident Probability</span>
+                        <span>Вероятность инцидента</span>
                         <span>{zone.predictedIncidentProbability}%</span>
                       </div>
                       <Progress value={zone.predictedIncidentProbability} className="h-1.5 bg-muted" indicatorClassName="bg-red-500" />

@@ -6,6 +6,7 @@ import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { CalendarIcon, Filter, RefreshCw } from 'lucide-react'
 import { format } from 'date-fns'
+import { ru } from 'date-fns/locale'
 import { cn } from '@/lib/utils'
 
 interface FiltersProps {
@@ -37,10 +38,10 @@ export function Filters({
         onValueChange={(value) => onFilterChange('organization', value)}
       >
         <SelectTrigger className="h-8 w-[160px] border-border bg-background text-xs font-medium hover:bg-muted/50 transition-colors">
-          <SelectValue placeholder="Organization" />
+          <SelectValue placeholder="Организация" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all" className="text-xs">All Organizations</SelectItem>
+          <SelectItem value="all" className="text-xs">Все организации</SelectItem>
           {organizations.map((org) => (
             <SelectItem key={org} value={org} className="text-xs">
               {org}
@@ -54,10 +55,10 @@ export function Filters({
         onValueChange={(value) => onFilterChange('incidentType', value)}
       >
         <SelectTrigger className="h-8 w-[140px] border-border bg-background text-xs font-medium hover:bg-muted/50 transition-colors">
-          <SelectValue placeholder="Incident Type" />
+          <SelectValue placeholder="Тип инцидента" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all" className="text-xs">All Types</SelectItem>
+          <SelectItem value="all" className="text-xs">Все типы</SelectItem>
           {incidentTypes.map((type) => (
             <SelectItem key={type} value={type} className="text-xs">
               {type}
@@ -77,7 +78,7 @@ export function Filters({
             )}
           >
             <CalendarIcon className="mr-2 h-3.5 w-3.5" />
-            {filters.startDate ? format(filters.startDate, 'MMM d, yyyy') : 'Start Date'}
+            {filters.startDate ? format(filters.startDate, 'd MMM, yyyy', { locale: ru }) : 'Дата начала'}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
@@ -86,6 +87,7 @@ export function Filters({
             selected={filters.startDate}
             onSelect={(date) => onFilterChange('startDate', date)}
             initialFocus
+            locale={ru}
           />
         </PopoverContent>
       </Popover>
@@ -94,13 +96,14 @@ export function Filters({
         <PopoverTrigger asChild>
           <Button
             variant="outline"
+            size="sm"
             className={cn(
-              'w-[140px] justify-start border-border/50 bg-secondary/50 text-left font-normal',
+              'h-8 w-[130px] justify-start border-border bg-background text-left text-xs font-medium hover:bg-muted/50 transition-colors',
               !filters.endDate && 'text-muted-foreground'
             )}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {filters.endDate ? format(filters.endDate, 'MMM d, yyyy') : 'End Date'}
+            <CalendarIcon className="mr-2 h-3.5 w-3.5" />
+            {filters.endDate ? format(filters.endDate, 'd MMM, yyyy', { locale: ru }) : 'Дата конца'}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
@@ -109,6 +112,7 @@ export function Filters({
             selected={filters.endDate}
             onSelect={(date) => onFilterChange('endDate', date)}
             initialFocus
+            locale={ru}
           />
         </PopoverContent>
       </Popover>
@@ -118,9 +122,9 @@ export function Filters({
         size="icon"
         onClick={onRefresh}
         disabled={isLoading}
-        className="border-border/50 bg-secondary/50"
+        className="h-8 w-8 border-border bg-background hover:bg-muted/50 transition-colors"
       >
-        <RefreshCw className={cn('h-4 w-4', isLoading && 'animate-spin')} />
+        <RefreshCw className={cn('h-3.5 w-3.5', isLoading && 'animate-spin')} />
       </Button>
     </div>
   )

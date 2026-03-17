@@ -7,9 +7,7 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: 'Safety AI Dashboard | HSE Analytics',
-  description: 'AI-powered Health, Safety, and Environment dashboard for oil and gas operations. Real-time incident analytics, predictive insights, and safety recommendations.',
-  keywords: ['HSE', 'safety', 'oil and gas', 'incident management', 'AI analytics', 'Kazakhstan'],
+  title: 'Аналитика ОТ, ТБ и ООС'
 }
 
 export const viewport: Viewport = {
@@ -24,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="ru">
       <body className="font-sans antialiased">
         {children}
         <Analytics />

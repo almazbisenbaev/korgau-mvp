@@ -44,7 +44,7 @@ export function Recommendations({ analysis, isLoading }: RecommendationsProps) {
       <CardHeader className="pb-4">
         <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
           <Lightbulb className="h-4 w-4 text-amber-500" />
-          AI Safety Recommendations
+          Рекомендации ИИ по безопасности
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -64,7 +64,7 @@ export function Recommendations({ analysis, isLoading }: RecommendationsProps) {
                 <div className="mb-4 flex items-start justify-between gap-4">
                   <div className="space-y-2">
                     <Badge variant="outline" className={`text-[10px] tracking-widest ${getPriorityColor(rec.priority)}`}>
-                      {rec.priority.toUpperCase()}
+                      {rec.priority === 'critical' ? 'КРИТИЧЕСКИ' : rec.priority === 'high' ? 'ВЫСОКИЙ' : 'СРЕДНИЙ'}
                     </Badge>
                     <h3 className="font-bold text-foreground leading-tight">{rec.title}</h3>
                     <p className="text-sm text-muted-foreground line-clamp-2">{rec.description}</p>
@@ -73,7 +73,7 @@ export function Recommendations({ analysis, isLoading }: RecommendationsProps) {
 
                 <div className="mt-auto pt-4 border-t border-border grid grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Est. Savings</div>
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Экономия</div>
                     <div className="flex items-center gap-1.5 font-bold text-emerald-600">
                       <DollarSign className="h-3.5 w-3.5" />
                       <span>{formatCurrency(rec.estimatedCostSavingsTenge)}</span>
@@ -81,7 +81,7 @@ export function Recommendations({ analysis, isLoading }: RecommendationsProps) {
                   </div>
 
                   <div className="space-y-1">
-                    <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Impact</div>
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Эффект</div>
                     <div className="text-xs font-medium text-foreground truncate">
                       {rec.expectedImpact}
                     </div>

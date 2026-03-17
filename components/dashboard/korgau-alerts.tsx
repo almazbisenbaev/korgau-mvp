@@ -27,13 +27,26 @@ function getAlertTypeIcon(type: string) {
 function getAlertTypeLabel(type: string) {
   switch (type) {
     case 'systematic_violation':
-      return 'Systematic Violation'
+      return 'Систематическое нарушение'
     case 'emerging_trend':
-      return 'Emerging Trend'
+      return 'Новый тренд'
     case 'critical_risk':
-      return 'Critical Risk'
+      return 'Критический риск'
     default:
       return type
+  }
+}
+
+function getSeverityLabel(severity: string) {
+  switch (severity) {
+    case 'critical':
+      return 'КРИТИЧЕСКИ'
+    case 'high':
+      return 'ВЫСОКИЙ'
+    case 'medium':
+      return 'СРЕДНИЙ'
+    default:
+      return severity.toUpperCase()
   }
 }
 
@@ -71,7 +84,7 @@ export function KorgauAlerts({ analysis, isLoading }: KorgauAlertsProps) {
       <CardHeader className="pb-4">
         <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
           <AlertTriangle className="h-4 w-4 text-orange-500" />
-          Safety Alerts
+          Уведомления безопасности
           {alerts.length > 0 && (
             <Badge variant="secondary" className="ml-2 h-5 bg-orange-100 text-orange-700 border-none font-bold">
               {alerts.length}
@@ -91,9 +104,9 @@ export function KorgauAlerts({ analysis, isLoading }: KorgauAlertsProps) {
             <div className="mb-4 rounded-full bg-emerald-50 p-4">
               <Zap className="h-8 w-8 text-emerald-500" />
             </div>
-            <h3 className="text-lg font-bold text-foreground">No Active Alerts</h3>
+            <h3 className="text-lg font-bold text-foreground">Нет активных уведомлений</h3>
             <p className="max-w-[280px] text-sm text-muted-foreground">
-              All safety observations are within normal parameters at this time.
+              Все показатели безопасности находятся в пределах нормы.
             </p>
           </div>
         ) : (
@@ -107,7 +120,7 @@ export function KorgauAlerts({ analysis, isLoading }: KorgauAlertsProps) {
                   <div className="flex-1 space-y-3">
                     <div className="flex items-center gap-2">
                       <Badge variant="outline" className={`text-[10px] tracking-widest ${getSeverityColor(alert.severity)}`}>
-                        {alert.severity.toUpperCase()}
+                        {getSeverityLabel(alert.severity)}
                       </Badge>
                       <span className="text-xs font-bold text-muted-foreground uppercase tracking-tighter">
                         {getAlertTypeLabel(alert.alertType)}
@@ -126,14 +139,14 @@ export function KorgauAlerts({ analysis, isLoading }: KorgauAlertsProps) {
                       </div>
                       <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                         <Hash className="h-3.5 w-3.5" />
-                        <span>{alert.frequency} occurrences</span>
+                        <span>{alert.frequency} случаев</span>
                       </div>
                     </div>
 
                     <div className="mt-4 rounded-lg bg-muted/30 p-3">
                       <div className="flex items-center gap-2 text-xs font-bold text-foreground mb-1 uppercase tracking-wider">
                         <Zap className="h-3.5 w-3.5 text-primary" />
-                        <span>Recommended Intervention</span>
+                        <span>Рекомендуемые меры</span>
                       </div>
                       <p className="text-sm text-muted-foreground italic">
                         "{alert.recommendedIntervention}"
