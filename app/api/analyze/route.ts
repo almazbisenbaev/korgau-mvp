@@ -98,43 +98,43 @@ export async function GET() {
       currentDate: new Date().toISOString().split('T')[0],
     }
 
-    const systemPrompt = `You are an expert HSE (Health, Safety, and Environment) analyst for oil and gas operations in Kazakhstan. 
-Your task is to analyze safety data and provide actionable insights.
+    const systemPrompt = `Ты экспертом-аналитик по ОТ, ТБ и ООС (HSE) для нефтегазовых операций в Казахстане. 
+твоя задача — проанализировать данные по безопасности и предоставить практические выводы.
 
-IMPORTANT INSTRUCTIONS:
-1. Analyze the provided incident and Korgau card data thoroughly
-2. Calculate realistic forecasts based on historical trends
-3. Identify systematic patterns in safety violations
-4. Provide specific, actionable recommendations
-5. Calculate economic impact in Kazakhstani Tenge (1 USD ≈ 450 KZT)
-6. Consider industry-specific risks for oil & gas operations
-7. The "lives saved" metric should be based on prevented incidents from near-misses and early interventions
-8. Money saved should account for avoided medical costs, lost work days, equipment damage, and regulatory fines
+ВАЖНЫЕ ИНСТРУКЦИИ:
+1. Тщательно проанализируй предоставленные данные об инцидентах и картах Korgau.
+2. Рассчитайте реалистичные прогнозы на основе исторических трендов.
+3. Выявите систематические закономерности в нарушениях безопасности.
+4. Предоставьте конкретные, выполнимые рекомендации.
+5. Рассчитайте экономический эффект в казахстанских тенге (1 USD ≈ 450 KZT).
+6. Учитывайте специфические отраслевые риски для нефтегазовых операций.
+7. Показатель «спасенных жизней» должен основываться на предотвращенных инцидентах на основе данных о потенциально опасных ситуациях (near-misses) и ранних вмешательствах.
+8. Сэкономленные деньги должны учитывать предотвращенные медицинские расходы, потерянные рабочие дни, повреждение оборудования и нормативные штрафы.
 
-Current statistics:
-- Total incidents: ${incidentStats.totalIncidents}
-- Total injuries: ${incidentStats.totalInjuries}
-- Total fatalities: ${incidentStats.totalFatalities}
-- Total work days lost: ${incidentStats.totalWorkDaysLost}
-- Total cost: ${incidentStats.totalCost} KZT
-- Total Korgau observations: ${korgauStats.totalCards}
-- Open safety cards: ${korgauStats.openCards}`
+Текущая статистика:
+- Всего инцидентов: ${incidentStats.totalIncidents}
+- Всего травм: ${incidentStats.totalInjuries}
+- Смертельных случаев: ${incidentStats.totalFatalities}
+- Потеряно рабочих дней: ${incidentStats.totalWorkDaysLost}
+- Общая стоимость: ${incidentStats.totalCost} KZT
+- Всего наблюдений Korgau: ${korgauStats.totalCards}
+- Открытых карт безопасности: ${korgauStats.openCards}`
 
     const { output } = await generateText({
       model: google('gemini-3.1-flash-lite-preview'),
       output: Output.object({ schema: analysisSchema }),
       system: systemPrompt,
-      prompt: `Analyze this HSE safety data and provide comprehensive analysis:
+      prompt: `Проанализируйте эти данные по безопасности ОТ, ТБ и ООС и предоставьте комплексный анализ на РУССКОМ ЯЗЫКЕ:
 
 ${JSON.stringify(dataSnapshot, null, 2)}
 
-Provide a complete analysis including:
-1. Summary statistics with economic effect calculations (lives saved, money saved)
-2. Incident forecasts for 3, 6, and 12 months with confidence intervals
-3. Top 5 risk zones (organizations) with probability scores
-4. At least 3 specific safety recommendations
-5. Korgau alerts for systematic violations
-6. Trend analysis with monthly data`,
+Предоставь полный анализ, включающий:
+1. Сводную статистику с расчетами экономического эффекта (спасенные жизни, сэкономленные деньги).
+2. Прогнозы инцидентов на 3, 6 и 12 месяцев с доверительными интервалами.
+3. Топ-5 зон риска (организаций) с оценками вероятности.
+4. Минимум 3 конкретные рекомендации по безопасности.
+5. Уведомления Korgau о систематических нарушениях.
+6. Анализ трендов с ежемесячными данными.`,
     })
 
     return Response.json(output)
