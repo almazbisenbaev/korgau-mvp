@@ -44,48 +44,72 @@ export default function DashboardContent() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-lg">
-        <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between px-4 lg:px-8">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-              <Shield className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-lg font-semibold text-foreground">Safety AI Dashboard</h1>
-              <p className="text-xs text-muted-foreground">HSE Analytics Platform</p>
-            </div>
+      <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
+        <div className="mx-auto flex h-14 max-w-[1600px] items-center justify-between px-4 lg:px-8">
+          <div className="flex items-center gap-2">
+            <Shield className="h-5 w-5 text-primary" />
+            <h1 className="text-sm font-semibold tracking-tight text-foreground">Korgau AI</h1>
           </div>
           
           <Button
             onClick={handleRefresh}
             disabled={isLoading}
-            className="gap-2"
+            variant="outline"
+            size="sm"
+            className="gap-2 h-8"
           >
-            <Sparkles className="h-4 w-4" />
-            {isLoading ? 'Analyzing...' : 'Run AI Analysis'}
+            <Sparkles className="h-3.5 w-3.5" />
+            {isLoading ? 'Analyzing...' : 'Refresh Insights'}
           </Button>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-[1600px] px-4 py-6 lg:px-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <TabsList className="grid w-full grid-cols-4 sm:w-auto">
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="predictions">Predictions</TabsTrigger>
-              <TabsTrigger value="recommendations">AI Insights</TabsTrigger>
-              <TabsTrigger value="alerts">Korgau Alerts</TabsTrigger>
+      <main className="mx-auto max-w-[1600px] px-4 py-8 lg:px-8">
+        <div className="mb-8 flex flex-col gap-1">
+          <h2 className="text-2xl font-bold tracking-tight">Safety Overview</h2>
+          <p className="text-sm text-muted-foreground">Monitor and analyze safety performance across all operations.</p>
+        </div>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+          <div className="flex flex-col gap-6 border-b border-border pb-2 sm:flex-row sm:items-center sm:justify-between">
+            <TabsList className="h-9 bg-transparent p-0 gap-6">
+              <TabsTrigger 
+                value="overview" 
+                className="relative h-9 rounded-none border-b-2 border-transparent bg-transparent px-1 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+              >
+                Overview
+              </TabsTrigger>
+              <TabsTrigger 
+                value="predictions"
+                className="relative h-9 rounded-none border-b-2 border-transparent bg-transparent px-1 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+              >
+                Predictions
+              </TabsTrigger>
+              <TabsTrigger 
+                value="recommendations"
+                className="relative h-9 rounded-none border-b-2 border-transparent bg-transparent px-1 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+              >
+                AI Insights
+              </TabsTrigger>
+              <TabsTrigger 
+                value="alerts"
+                className="relative h-9 rounded-none border-b-2 border-transparent bg-transparent px-1 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+              >
+                Safety Alerts
+              </TabsTrigger>
             </TabsList>
             
-            <Filters
-              filters={filters}
-              onFilterChange={handleFilterChange}
-              onRefresh={handleRefresh}
-              organizations={dashboardData?.filterOptions?.organizations || []}
-              incidentTypes={dashboardData?.filterOptions?.incidentTypes || []}
-              isLoading={isLoading}
-            />
+            <div className="flex items-center gap-2">
+              <Filters
+                filters={filters}
+                onFilterChange={handleFilterChange}
+                onRefresh={handleRefresh}
+                organizations={dashboardData?.filterOptions?.organizations || []}
+                incidentTypes={dashboardData?.filterOptions?.incidentTypes || []}
+                isLoading={isLoading}
+              />
+            </div>
           </div>
 
           <TabsContent value="overview" className="space-y-6">

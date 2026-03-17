@@ -26,13 +26,13 @@ function formatCurrency(amount: number): string {
 function getPriorityColor(priority: string) {
   switch (priority) {
     case 'critical':
-      return 'border-red-500/50 bg-red-500/10 text-red-400'
+      return 'border-red-100 bg-red-50 text-red-700 font-bold'
     case 'high':
-      return 'border-orange-500/50 bg-orange-500/10 text-orange-400'
+      return 'border-orange-100 bg-orange-50 text-orange-700 font-bold'
     case 'medium':
-      return 'border-yellow-500/50 bg-yellow-500/10 text-yellow-400'
+      return 'border-amber-100 bg-amber-50 text-amber-700 font-bold'
     default:
-      return 'border-blue-500/50 bg-blue-500/10 text-blue-400'
+      return 'border-blue-100 bg-blue-50 text-blue-700 font-bold'
   }
 }
 
@@ -40,10 +40,10 @@ export function Recommendations({ analysis, isLoading }: RecommendationsProps) {
   const recommendations = analysis?.recommendations || []
 
   return (
-    <Card className="border-border/50 bg-card/50 backdrop-blur">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg text-foreground">
-          <Lightbulb className="h-5 w-5 text-yellow-400" />
+    <Card className="border-border bg-card shadow-sm">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
+          <Lightbulb className="h-4 w-4 text-amber-500" />
           AI Safety Recommendations
         </CardTitle>
       </CardHeader>
@@ -51,65 +51,49 @@ export function Recommendations({ analysis, isLoading }: RecommendationsProps) {
         {isLoading ? (
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-32 animate-pulse rounded-lg bg-muted" />
+              <div key={i} className="h-32 animate-pulse rounded-lg bg-muted/20" />
             ))}
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="grid gap-6 md:grid-cols-2">
             {recommendations.map((rec, index) => (
               <div
                 key={index}
-                className="rounded-lg border border-border/50 bg-secondary/30 p-4"
+                className="group relative flex flex-col rounded-xl border border-border bg-background p-5 transition-all hover:border-primary/20 hover:shadow-md"
               >
-                <div className="mb-3 flex items-start justify-between gap-4">
-                  <div>
-                    <div className="mb-1 flex items-center gap-2">
-                      <Badge variant="outline" className={getPriorityColor(rec.priority)}>
-                        {rec.priority.toUpperCase()}
-                      </Badge>
-                      <h3 className="font-semibold text-foreground">{rec.title}</h3>
-                    </div>
-                    <p className="text-sm text-muted-foreground">{rec.description}</p>
+                <div className="mb-4 flex items-start justify-between gap-4">
+                  <div className="space-y-2">
+                    <Badge variant="outline" className={`text-[10px] tracking-widest ${getPriorityColor(rec.priority)}`}>
+                      {rec.priority.toUpperCase()}
+                    </Badge>
+                    <h3 className="font-bold text-foreground leading-tight">{rec.title}</h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2">{rec.description}</p>
                   </div>
                 </div>
 
-                <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="h-4 w-4 text-emerald-400" />
-                    <div>
-                      <div className="text-xs text-muted-foreground">Est. Savings</div>
-                      <div className="font-medium text-emerald-400">
-                        {formatCurrency(rec.estimatedCostSavingsTenge)}
-                      </div>
+                <div className="mt-auto pt-4 border-t border-border grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Est. Savings</div>
+                    <div className="flex items-center gap-1.5 font-bold text-emerald-600">
+                      <DollarSign className="h-3.5 w-3.5" />
+                      <span>{formatCurrency(rec.estimatedCostSavingsTenge)}</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <Lightbulb className="h-4 w-4 text-blue-400" />
-                    <div>
-                      <div className="text-xs text-muted-foreground">Expected Impact</div>
-                      <div className="text-sm text-foreground">{rec.expectedImpact}</div>
+                  <div className="space-y-1">
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Impact</div>
+                    <div className="text-xs font-medium text-foreground truncate">
+                      {rec.expectedImpact}
                     </div>
                   </div>
-
-                  <div className="flex items-center gap-2">
-                    <Building className="h-4 w-4 text-purple-400" />
-                    <div>
-                      <div className="text-xs text-muted-foreground">Target Orgs</div>
-                      <div className="flex flex-wrap gap-1">
-                        {rec.targetOrganizations.slice(0, 2).map((org, i) => (
-                          <Badge key={i} variant="secondary" className="text-xs">
-                            {org.split(' ')[0]}
-                          </Badge>
-                        ))}
-                        {rec.targetOrganizations.length > 2 && (
-                          <Badge variant="secondary" className="text-xs">
-                            +{rec.targetOrganizations.length - 2}
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                </div>
+                
+                <div className="mt-4 flex flex-wrap gap-1.5">
+                  {rec.targetOrganizations.slice(0, 3).map((org) => (
+                    <span key={org} className="rounded-md bg-muted/50 px-2 py-0.5 text-[10px] font-medium text-muted-foreground border border-border/50">
+                      {org}
+                    </span>
+                  ))}
                 </div>
               </div>
             ))}

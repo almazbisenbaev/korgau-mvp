@@ -31,23 +31,18 @@ export function Filters({
   isLoading,
 }: FiltersProps) {
   return (
-    <div className="flex flex-wrap items-center gap-3">
-      <div className="flex items-center gap-2 text-muted-foreground">
-        <Filter className="h-4 w-4" />
-        <span className="text-sm font-medium">Filters:</span>
-      </div>
-
+    <div className="flex flex-wrap items-center gap-2">
       <Select
         value={filters.organization}
         onValueChange={(value) => onFilterChange('organization', value)}
       >
-        <SelectTrigger className="w-[180px] border-border/50 bg-secondary/50">
+        <SelectTrigger className="h-8 w-[160px] border-border bg-background text-xs font-medium hover:bg-muted/50 transition-colors">
           <SelectValue placeholder="Organization" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Organizations</SelectItem>
+          <SelectItem value="all" className="text-xs">All Organizations</SelectItem>
           {organizations.map((org) => (
-            <SelectItem key={org} value={org}>
+            <SelectItem key={org} value={org} className="text-xs">
               {org}
             </SelectItem>
           ))}
@@ -58,13 +53,13 @@ export function Filters({
         value={filters.incidentType}
         onValueChange={(value) => onFilterChange('incidentType', value)}
       >
-        <SelectTrigger className="w-[160px] border-border/50 bg-secondary/50">
+        <SelectTrigger className="h-8 w-[140px] border-border bg-background text-xs font-medium hover:bg-muted/50 transition-colors">
           <SelectValue placeholder="Incident Type" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Types</SelectItem>
+          <SelectItem value="all" className="text-xs">All Types</SelectItem>
           {incidentTypes.map((type) => (
-            <SelectItem key={type} value={type}>
+            <SelectItem key={type} value={type} className="text-xs">
               {type}
             </SelectItem>
           ))}
@@ -75,12 +70,13 @@ export function Filters({
         <PopoverTrigger asChild>
           <Button
             variant="outline"
+            size="sm"
             className={cn(
-              'w-[140px] justify-start border-border/50 bg-secondary/50 text-left font-normal',
+              'h-8 w-[130px] justify-start border-border bg-background text-left text-xs font-medium hover:bg-muted/50 transition-colors',
               !filters.startDate && 'text-muted-foreground'
             )}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
+            <CalendarIcon className="mr-2 h-3.5 w-3.5" />
             {filters.startDate ? format(filters.startDate, 'MMM d, yyyy') : 'Start Date'}
           </Button>
         </PopoverTrigger>

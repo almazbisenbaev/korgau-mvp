@@ -31,12 +31,12 @@ interface IncidentChartsProps {
   isLoading: boolean
 }
 
-const COLORS = ['#6366f1', '#22c55e', '#eab308', '#ef4444', '#8b5cf6']
+const COLORS = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#6366f1']
 const SEVERITY_COLORS: Record<string, string> = {
-  critical: '#ef4444',
-  high: '#f97316',
-  medium: '#eab308',
-  low: '#22c55e',
+  critical: '#dc2626',
+  high: '#ea580c',
+  medium: '#d97706',
+  low: '#16a34a',
 }
 
 export function IncidentCharts({ analysis, incidentStats, isLoading }: IncidentChartsProps) {
@@ -59,7 +59,7 @@ export function IncidentCharts({ analysis, incidentStats, isLoading }: IncidentC
   const severityData = incidentStats?.incidentsBySeverity?.map((item) => ({
     name: item.severity.charAt(0).toUpperCase() + item.severity.slice(1),
     value: Number(item.count),
-    color: SEVERITY_COLORS[item.severity] || '#6366f1',
+    color: SEVERITY_COLORS[item.severity] || '#2563eb',
   })) || []
 
   const trendData = analysis?.trendAnalysis?.incidentTrendByMonth || monthlyData.map(m => ({
@@ -69,15 +69,15 @@ export function IncidentCharts({ analysis, incidentStats, isLoading }: IncidentC
   }))
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
-      <Card className="border-border/50 bg-card/50 backdrop-blur">
-        <CardHeader>
-          <CardTitle className="text-lg text-foreground">Incidents by Type</CardTitle>
+    <div className="grid gap-6 md:grid-cols-2">
+      <Card className="border-border bg-card shadow-sm">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Incidents by Type</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
             <div className="flex h-[300px] items-center justify-center">
-              <div className="h-32 w-32 animate-pulse rounded-full bg-muted" />
+              <div className="h-32 w-32 animate-pulse rounded-full bg-muted/20" />
             </div>
           ) : (
             <ResponsiveContainer width="100%" height={300}>
@@ -88,9 +88,9 @@ export function IncidentCharts({ analysis, incidentStats, isLoading }: IncidentC
                   cy="50%"
                   innerRadius={60}
                   outerRadius={100}
-                  paddingAngle={2}
+                  paddingAngle={4}
                   dataKey="value"
-                  label={({ name, percent }) => `${name.split('/')[0]} ${(percent * 100).toFixed(0)}%`}
+                  label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
                   labelLine={false}
                 >
                   {typeData.map((_, index) => (
@@ -98,12 +98,12 @@ export function IncidentCharts({ analysis, incidentStats, isLoading }: IncidentC
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px',
-                    color: 'hsl(var(--foreground))',
-                  }}
+                  contentStyle={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                />
+                <Legend 
+                  verticalAlign="bottom" 
+                  height={36} 
+                  formatter={(value) => <span className="text-xs text-muted-foreground">{value}</span>}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -111,105 +111,97 @@ export function IncidentCharts({ analysis, incidentStats, isLoading }: IncidentC
         </CardContent>
       </Card>
 
-      <Card className="border-border/50 bg-card/50 backdrop-blur">
-        <CardHeader>
-          <CardTitle className="text-lg text-foreground">Incidents by Organization</CardTitle>
+      <Card className="border-border bg-card shadow-sm">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Top Organizations</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="flex h-[300px] flex-col justify-center gap-2">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="h-8 animate-pulse rounded bg-muted" />
+            <div className="flex h-[300px] flex-col gap-2 items-center justify-center">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-8 w-full animate-pulse rounded bg-muted/20" />
               ))}
             </div>
           ) : (
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={orgData} layout="vertical" margin={{ left: 10, right: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis type="number" stroke="hsl(var(--muted-foreground))" />
-                <YAxis 
-                  type="category" 
-                  dataKey="name" 
-                  stroke="hsl(var(--muted-foreground))"
-                  width={80}
-                  tick={{ fontSize: 12 }}
+              <BarChart data={orgData} layout="vertical" margin={{ left: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f1f5f9" />
+                <XAxis type="number" hide />
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 12, fill: '#64748b' }}
                 />
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px',
-                    color: 'hsl(var(--foreground))',
-                  }}
-                  formatter={(value, _, props) => [value, props.payload.fullName]}
+                  cursor={{ fill: '#f8fafc' }}
+                  contentStyle={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px' }}
                 />
-                <Bar dataKey="incidents" fill="#6366f1" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="incidents" fill="#2563eb" radius={[0, 4, 4, 0]} barSize={20} />
               </BarChart>
             </ResponsiveContainer>
           )}
         </CardContent>
       </Card>
 
-      <Card className="border-border/50 bg-card/50 backdrop-blur">
-        <CardHeader>
-          <CardTitle className="text-lg text-foreground">Incident Trend</CardTitle>
+      <Card className="border-border bg-card shadow-sm md:col-span-2">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Incident Trend & AI Prediction</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="flex h-[300px] items-end justify-between gap-2">
-              {[...Array(12)].map((_, i) => (
-                <div
-                  key={i}
-                  className="w-full animate-pulse rounded-t bg-muted"
-                  style={{ height: `${50 + (i * 15) % 150}px` }}
-                />
-              ))}
+            <div className="flex h-[350px] items-center justify-center">
+              <div className="h-full w-full animate-pulse rounded bg-muted/20" />
             </div>
           ) : (
-            <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={trendData} margin={{ left: 0, right: 10 }}>
+            <ResponsiveContainer width="100%" height={350}>
+              <AreaChart data={trendData}>
                 <defs>
                   <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#2563eb" stopOpacity="0.1" />
+                    <stop offset="95%" stopColor="#2563eb" stopOpacity="0" />
+                  </linearGradient>
+                  <linearGradient id="colorPredicted" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#6366f1" stopOpacity="0.1" />
+                    <stop offset="95%" stopColor="#6366f1" stopOpacity="0" />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis 
-                  dataKey="month" 
-                  stroke="hsl(var(--muted-foreground))"
-                  tick={{ fontSize: 12 }}
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis
+                  dataKey="month"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 12, fill: '#64748b' }}
                 />
-                <YAxis stroke="hsl(var(--muted-foreground))" />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 12, fill: '#64748b' }}
+                />
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px',
-                    color: 'hsl(var(--foreground))',
-                  }}
+                  contentStyle={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px' }}
                 />
-                <Legend />
+                <Legend verticalAlign="top" align="right" height={36} />
                 <Area
                   type="monotone"
                   dataKey="actual"
-                  stroke="#6366f1"
+                  stroke="#2563eb"
+                  strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#colorActual)"
-                  strokeWidth={2}
                   name="Actual Incidents"
                 />
-                {trendData.some(d => d.predicted !== null) && (
-                  <Line
-                    type="monotone"
-                    dataKey="predicted"
-                    stroke="#22c55e"
-                    strokeDasharray="5 5"
-                    strokeWidth={2}
-                    name="Predicted"
-                    dot={false}
-                  />
-                )}
+                <Area
+                  type="monotone"
+                  dataKey="predicted"
+                  stroke="#6366f1"
+                  strokeWidth={2}
+                  strokeDasharray="5 5"
+                  fillOpacity={1}
+                  fill="url(#colorPredicted)"
+                  name="AI Prediction"
+                />
               </AreaChart>
             </ResponsiveContainer>
           )}
