@@ -125,10 +125,10 @@ export async function getIncidentStats() {
     totalIncidents: Number(totalIncidents[0]?.count ?? 0),
     totalInjuries: Number(totalInjuries[0]?.total ?? 0),
     totalFatalities: Number(totalFatalities[0]?.total ?? 0),
-    incidentsByType: (incidentsByType as any[]).map(i => ({...i, count: Number(i.count)})),
-    incidentsByOrg: (incidentsByOrg as any[]).map(i => ({...i, count: Number(i.count)})),
-    incidentsByMonth: (incidentsByMonth as any[]).map(i => ({...i, count: Number(i.count)})),
-    incidentsBySeverity: (incidentsBySeverity as any[]).map(i => ({...i, count: Number(i.count)}))
+    incidentsByType: (incidentsByType as any[]).map(i => ({ ...i, count: Number(i.count) })),
+    incidentsByOrg: (incidentsByOrg as any[]).map(i => ({ ...i, count: Number(i.count) })),
+    incidentsByMonth: (incidentsByMonth as any[]).map(i => ({ ...i, count: Number(i.count) })),
+    incidentsBySeverity: (incidentsBySeverity as any[]).map(i => ({ ...i, count: Number(i.count) }))
   }
 }
 
@@ -145,17 +145,29 @@ export async function getKorgauStats() {
     sql`SELECT COUNT(*) as count FROM korgau_cards WHERE status = 'open'`,
     sql`SELECT category, COUNT(*) as count FROM korgau_cards GROUP BY category ORDER BY count DESC`,
     sql`SELECT organization, COUNT(*) as count FROM korgau_cards GROUP BY organization ORDER BY count DESC`,
-    sql`SELECT risk_level, COUNT(*) as count FROM korgau_cards GROUP BY risk_level`,
+    sql`
+      SELECT
+        CASE
+          WHEN LOWER(observation_type) LIKE '%опасный случай%' THEN 'critical'
+          WHEN LOWER(observation_type) LIKE '%опасный фактор%' THEN 'high'
+          WHEN LOWER(observation_type) LIKE '%небезопасное%' THEN 'medium'
+          ELSE 'low'
+        END as risk_level,
+        COUNT(*) as count
+      FROM korgau_cards
+      GROUP BY 1
+      ORDER BY count DESC
+    `,
     sql`SELECT observation_type, COUNT(*) as count FROM korgau_cards GROUP BY observation_type`
   ])
 
   return {
     totalCards: Number(totalCards[0]?.count || 0),
     openCards: Number(openCards[0]?.count || 0),
-    cardsByCategory,
-    cardsByOrg,
-    cardsByRiskLevel,
-    cardsByType
+    cardsByCategory: (cardsByCategory as any[]).map(i => ({ ...i, count: Number(i.count) })),
+    cardsByOrg: (cardsByOrg as any[]).map(i => ({ ...i, count: Number(i.count) })),
+    cardsByRiskLevel: (cardsByRiskLevel as any[]).map(i => ({ ...i, count: Number(i.count) })),
+    cardsByType: (cardsByType as any[]).map(i => ({ ...i, count: Number(i.count) }))
   }
 }
 

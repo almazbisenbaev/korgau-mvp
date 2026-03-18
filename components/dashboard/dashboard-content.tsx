@@ -27,7 +27,7 @@ export default function DashboardContent() {
 
   const { data: dashboardData, isLoading: isDataLoading, mutate: refreshDashboardData } = useSWR('/api/data', fetcher)
   const { data: incidents, isLoading: isIncidentsLoading, mutate: refreshIncidents } = useSWR('/api/incidents', fetcher)
-  
+
   const [shouldAnalyze, setShouldAnalyze] = useState(false)
   const { data: analysis, isLoading: isAnalysisLoading, mutate: refreshAnalysis } = useSWR<SafetyAnalysis>(
     shouldAnalyze ? '/api/analyze' : null,
@@ -57,7 +57,7 @@ export default function DashboardContent() {
             <Shield className="h-5 w-5 text-primary" />
             <h1 className="text-sm font-semibold tracking-tight text-foreground">Korgau AI</h1>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <IncidentForm onIncidentAdded={() => {
               refreshIncidents()
@@ -87,33 +87,33 @@ export default function DashboardContent() {
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
           <div className="flex flex-col gap-6 border-b border-border pb-2 sm:flex-row sm:items-center sm:justify-between">
-            <TabsList className="h-9 bg-transparent p-0 gap-6">
-              <TabsTrigger 
-                value="overview" 
-                className="relative h-9 rounded-none border-b-2 border-transparent bg-transparent px-1 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+            <TabsList className="h-auto bg-transparent p-0 gap-2">
+              <TabsTrigger
+                value="overview"
+                className="relative h-10 rounded-t-lg border border-border border-b-0 bg-card/50 px-4 pb-1 pt-2 font-medium text-muted-foreground shadow-none transition-all cursor-pointer hover:bg-card hover:text-foreground data-[state=active]:border-primary data-[state=active]:border-b-0 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-none"
               >
-                Обзор
+                📊 Обзор
               </TabsTrigger>
-              <TabsTrigger 
+              <TabsTrigger
                 value="predictions"
-                className="relative h-9 rounded-none border-b-2 border-transparent bg-transparent px-1 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+                className="relative h-10 rounded-t-lg border border-border border-b-0 bg-card/50 px-4 pb-1 pt-2 font-medium text-muted-foreground shadow-none transition-all cursor-pointer hover:bg-card hover:text-foreground data-[state=active]:border-primary data-[state=active]:border-b-0 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-none"
               >
-                Прогнозы
+                🔮 Прогнозы
               </TabsTrigger>
-              <TabsTrigger 
+              <TabsTrigger
                 value="recommendations"
-                className="relative h-9 rounded-none border-b-2 border-transparent bg-transparent px-1 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+                className="relative h-10 rounded-t-lg border border-border border-b-0 bg-card/50 px-4 pb-1 pt-2 font-medium text-muted-foreground shadow-none transition-all cursor-pointer hover:bg-card hover:text-foreground data-[state=active]:border-primary data-[state=active]:border-b-0 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-none"
               >
-                Рекомендации ИИ
+                💡 Рекомендации ИИ
               </TabsTrigger>
-              <TabsTrigger 
+              <TabsTrigger
                 value="alerts"
-                className="relative h-9 rounded-none border-b-2 border-transparent bg-transparent px-1 pb-3 pt-2 font-medium text-muted-foreground shadow-none transition-none data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+                className="relative h-10 rounded-t-lg border border-border border-b-0 bg-card/50 px-4 pb-1 pt-2 font-medium text-muted-foreground shadow-none transition-all cursor-pointer hover:bg-card hover:text-foreground data-[state=active]:border-primary data-[state=active]:border-b-0 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-none"
               >
-                Уведомления
+                🔔 Уведомления
               </TabsTrigger>
             </TabsList>
-            
+
             <div className="flex items-center gap-2">
               <Filters
                 filters={filters}
@@ -127,10 +127,10 @@ export default function DashboardContent() {
           </div>
 
           <TabsContent value="overview" className="space-y-6">
-            <KPICards 
-              analysis={analysis || null} 
+            <KPICards
+              analysis={analysis || null}
               incidentStats={dashboardData?.incidentStats || null}
-              isLoading={isLoading} 
+              isLoading={isLoading}
             />
             <IncidentCharts
               incidents={incidents || []}
@@ -141,7 +141,7 @@ export default function DashboardContent() {
           </TabsContent>
 
           <TabsContent value="predictions" className="space-y-6">
-                        <KPICards analysis={analysis || null} incidentStats={dashboardData?.incidentStats || null} isLoading={isLoading} />
+            <KPICards analysis={analysis || null} incidentStats={dashboardData?.incidentStats || null} isLoading={isLoading} />
             <Predictions analysis={analysis || null} isLoading={isLoading} />
           </TabsContent>
 
