@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { TrendingUp, TrendingDown, Minus, Target, AlertTriangle, MapPin } from 'lucide-react'
+import { TrendingUp, TrendingDown, Minus, Target, AlertTriangle, MapPin, Sparkles } from 'lucide-react'
 import type { SafetyAnalysis } from '@/app/api/analyze/route'
 
 interface PredictionsProps {
@@ -45,6 +45,17 @@ function getTrendLabel(trend: string) {
 }
 
 export function Predictions({ analysis, isLoading }: PredictionsProps) {
+  if (!analysis && !isLoading) {
+    return (
+      <Card className="border-dashed border-2 flex items-center justify-center p-12 bg-muted/5">
+        <div className="text-center space-y-2">
+          <Sparkles className="h-8 w-8 text-primary mx-auto animate-pulse" />
+          <p className="text-muted-foreground font-medium">Нажмите кнопку &quot;Обновить данные&quot;, чтобы увидеть ИИ-прогнозы</p>
+        </div>
+      </Card>
+    )
+  }
+
   const forecasts = analysis?.forecasts
   const riskZones = analysis?.topRiskZones || []
 

@@ -12,10 +12,6 @@ export interface Incident {
   location: string
   injuries: number
   fatalities: number
-  work_days_lost: number
-  estimated_cost: number
-  root_cause: string
-  corrective_actions: string
   created_at: string
 }
 
@@ -111,8 +107,6 @@ export async function getIncidentStats() {
     totalIncidents,
     totalInjuries,
     totalFatalities,
-    totalWorkDaysLost,
-    totalCost,
     incidentsByType,
     incidentsByOrg,
     incidentsByMonth,
@@ -121,8 +115,6 @@ export async function getIncidentStats() {
     sql`SELECT COUNT(*) as count FROM incidents`,
     sql`SELECT COALESCE(SUM(injuries), 0) as total FROM incidents`,
     sql`SELECT COALESCE(SUM(fatalities), 0) as total FROM incidents`,
-    sql`SELECT COALESCE(SUM(work_days_lost), 0) as total FROM incidents`,
-    sql`SELECT COALESCE(SUM(estimated_cost), 0) as total FROM incidents`,
     sql`SELECT incident_type, COUNT(*) as count FROM incidents GROUP BY incident_type ORDER BY count DESC`,
     sql`SELECT organization, COUNT(*) as count FROM incidents GROUP BY organization ORDER BY count DESC`,
     sql`SELECT TO_CHAR(date, 'YYYY-MM') as month, COUNT(*) as count FROM incidents GROUP BY TO_CHAR(date, 'YYYY-MM') ORDER BY month`,
@@ -130,15 +122,13 @@ export async function getIncidentStats() {
   ])
 
   return {
-    totalIncidents: Number(totalIncidents[0]?.count || 0),
-    totalInjuries: Number(totalInjuries[0]?.total || 0),
-    totalFatalities: Number(totalFatalities[0]?.total || 0),
-    totalWorkDaysLost: Number(totalWorkDaysLost[0]?.total || 0),
-    totalCost: Number(totalCost[0]?.total || 0),
-    incidentsByType,
-    incidentsByOrg,
-    incidentsByMonth,
-    incidentsBySeverity
+    totalIncidents: Number(totalIncidents[0]?.count ?? 0),
+    totalInjuries: Number(totalInjuries[0]?.total ?? 0),
+    totalFatalities: Number(totalFatalities[0]?.total ?? 0),
+    incidentsByType: (incidentsByType as any[]).map(i => ({...i, count: Number(i.count)})),
+    incidentsByOrg: (incidentsByOrg as any[]).map(i => ({...i, count: Number(i.count)})),
+    incidentsByMonth: (incidentsByMonth as any[]).map(i => ({...i, count: Number(i.count)})),
+    incidentsBySeverity: (incidentsBySeverity as any[]).map(i => ({...i, count: Number(i.count)}))
   }
 }
 
@@ -177,8 +167,8 @@ export async function getFilterOptions() {
   ])
 
   return {
-    organizations: organizations.map((o: { organization: string }) => o.organization),
-    incidentTypes: incidentTypes.map((t: { incident_type: string }) => t.incident_type),
-    categories: categories.map((c: { category: string }) => c.category)
+    organizations: (organizations as any[]).map((o) => o.organization),
+    incidentTypes: (incidentTypes as any[]).map((t) => t.incident_type),
+    categories: (categories as any[]).map((c) => c.category)
   }
 }

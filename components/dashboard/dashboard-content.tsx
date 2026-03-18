@@ -27,8 +27,10 @@ export default function DashboardContent() {
 
   const { data: dashboardData, isLoading: isDataLoading, mutate: refreshDashboardData } = useSWR('/api/data', fetcher)
   const { data: incidents, isLoading: isIncidentsLoading, mutate: refreshIncidents } = useSWR('/api/incidents', fetcher)
+  
+  const [shouldAnalyze, setShouldAnalyze] = useState(false)
   const { data: analysis, isLoading: isAnalysisLoading, mutate: refreshAnalysis } = useSWR<SafetyAnalysis>(
-    '/api/analyze',
+    shouldAnalyze ? '/api/analyze' : null,
     fetcher,
     { revalidateOnFocus: false }
   )
@@ -38,6 +40,7 @@ export default function DashboardContent() {
   }, [])
 
   const handleRefresh = useCallback(() => {
+    setShouldAnalyze(true)
     refreshAnalysis()
     refreshDashboardData()
     refreshIncidents()
@@ -56,7 +59,11 @@ export default function DashboardContent() {
           </div>
           
           <div className="flex items-center gap-2">
-            <IncidentForm onIncidentAdded={refreshIncidents} />
+            <IncidentForm onIncidentAdded={() => {
+              refreshIncidents()
+              refreshDashboardData()
+              if (shouldAnalyze) refreshAnalysis()
+            }} />
             <Button
               onClick={handleRefresh}
               disabled={isLoading}
@@ -120,7 +127,11 @@ export default function DashboardContent() {
           </div>
 
           <TabsContent value="overview" className="space-y-6">
-            <KPICards analysis={analysis || null} isLoading={isLoading} />
+            <KPICards 
+              analysis={analysis || null} 
+              incidentStats={dashboardData?.incidentStats || null}
+              isLoading={isLoading} 
+            />
             <IncidentCharts
               incidents={incidents || []}
               analysis={analysis || null}
@@ -130,7 +141,7 @@ export default function DashboardContent() {
           </TabsContent>
 
           <TabsContent value="predictions" className="space-y-6">
-            <KPICards analysis={analysis || null} isLoading={isLoading} />
+                        <KPICards analysis={analysis || null} incidentStats={dashboardData?.incidentStats || null} isLoading={isLoading} />
             <Predictions analysis={analysis || null} isLoading={isLoading} />
           </TabsContent>
 

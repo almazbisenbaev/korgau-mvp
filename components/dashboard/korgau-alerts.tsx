@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { AlertTriangle, TrendingUp, Zap, Building, Hash } from 'lucide-react'
+import { AlertTriangle, TrendingUp, Zap, Building, Hash, Sparkles } from 'lucide-react'
 import type { SafetyAnalysis } from '@/app/api/analyze/route'
 
 interface KorgauAlertsProps {
@@ -77,6 +77,17 @@ function getAlertBorderColor(severity: string) {
 }
 
 export function KorgauAlerts({ analysis, isLoading }: KorgauAlertsProps) {
+  if (!analysis && !isLoading) {
+    return (
+      <Card className="border-dashed border-2 flex items-center justify-center p-12 bg-muted/5">
+        <div className="text-center space-y-2">
+          <Sparkles className="h-8 w-8 text-primary mx-auto animate-pulse" />
+          <p className="text-muted-foreground font-medium">Нажмите кнопку &quot;Обновить данные&quot;, чтобы увидеть уведомления безопасности</p>
+        </div>
+      </Card>
+    )
+  }
+
   const alerts = analysis?.korgauAlerts || []
 
   return (

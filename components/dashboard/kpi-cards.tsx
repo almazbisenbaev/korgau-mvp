@@ -15,6 +15,11 @@ import type { SafetyAnalysis } from '@/app/api/analyze/route'
 
 interface KPICardsProps {
   analysis: SafetyAnalysis | null
+  incidentStats: {
+    totalIncidents: number
+    totalInjuries: number
+    totalFatalities: number
+  } | null
   isLoading: boolean
 }
 
@@ -41,11 +46,11 @@ function formatCurrency(amount: number): string {
   return '₸' + formatNumber(amount)
 }
 
-export function KPICards({ analysis, isLoading }: KPICardsProps) {
+export function KPICards({ analysis, incidentStats, isLoading }: KPICardsProps) {
   const kpis = [
     {
       title: 'Всего инцидентов',
-      value: analysis?.summary?.totalIncidents || 0,
+      value: incidentStats?.totalIncidents ?? (analysis?.summary?.totalIncidents || 0),
       icon: AlertTriangle,
       color: 'text-orange-600',
       bgColor: 'bg-orange-50',
@@ -53,7 +58,7 @@ export function KPICards({ analysis, isLoading }: KPICardsProps) {
     },
     {
       title: 'Всего травм',
-      value: analysis?.summary?.totalInjuries || 0,
+      value: incidentStats?.totalInjuries ?? (analysis?.summary?.totalInjuries || 0),
       icon: Users,
       color: 'text-red-600',
       bgColor: 'bg-red-50',
@@ -108,10 +113,10 @@ export function KPICards({ analysis, isLoading }: KPICardsProps) {
     },
     {
       title: 'Смертельные случаи',
-      value: analysis?.summary?.totalFatalities || 0,
+      value: incidentStats?.totalFatalities ?? (analysis?.summary?.totalFatalities || 0),
       icon: FileText,
-      color: analysis?.summary?.totalFatalities ? 'text-red-600' : 'text-emerald-600',
-      bgColor: analysis?.summary?.totalFatalities ? 'bg-red-50' : 'bg-emerald-50',
+      color: (incidentStats?.totalFatalities || analysis?.summary?.totalFatalities) ? 'text-red-600' : 'text-emerald-600',
+      bgColor: (incidentStats?.totalFatalities || analysis?.summary?.totalFatalities) ? 'bg-red-50' : 'bg-emerald-50',
       format: formatNumber,
       description: 'Всего зафиксировано',
     },
