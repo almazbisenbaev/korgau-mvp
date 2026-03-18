@@ -26,6 +26,7 @@ export default function DashboardContent() {
   })
 
   const { data: dashboardData, isLoading: isDataLoading, mutate: refreshDashboardData } = useSWR('/api/data', fetcher)
+  const { data: incidents, isLoading: isIncidentsLoading, mutate: refreshIncidents } = useSWR('/api/incidents', fetcher)
   const { data: analysis, isLoading: isAnalysisLoading, mutate: refreshAnalysis } = useSWR<SafetyAnalysis>(
     '/api/analyze',
     fetcher,
@@ -39,9 +40,10 @@ export default function DashboardContent() {
   const handleRefresh = useCallback(() => {
     refreshAnalysis()
     refreshDashboardData()
-  }, [refreshAnalysis, refreshDashboardData])
+    refreshIncidents()
+  }, [refreshAnalysis, refreshDashboardData, refreshIncidents])
 
-  const isLoading = isDataLoading || isAnalysisLoading
+  const isLoading = isDataLoading || isAnalysisLoading || isIncidentsLoading
 
   return (
     <div className="min-h-screen bg-background">
@@ -54,7 +56,7 @@ export default function DashboardContent() {
           </div>
           
           <div className="flex items-center gap-2">
-            <IncidentForm onIncidentAdded={refreshDashboardData} />
+            <IncidentForm onIncidentAdded={refreshIncidents} />
             <Button
               onClick={handleRefresh}
               disabled={isLoading}
@@ -120,6 +122,7 @@ export default function DashboardContent() {
           <TabsContent value="overview" className="space-y-6">
             <KPICards analysis={analysis || null} isLoading={isLoading} />
             <IncidentCharts
+              incidents={incidents || []}
               analysis={analysis || null}
               incidentStats={dashboardData?.incidentStats || null}
               isLoading={isLoading}

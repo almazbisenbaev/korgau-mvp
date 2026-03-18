@@ -20,7 +20,22 @@ import {
 } from 'recharts'
 import type { SafetyAnalysis } from '@/app/api/analyze/route'
 
+interface Incident {
+  id: number;
+  date: string;
+  organization: string;
+  incident_type: string;
+  description: string;
+  severity: string;
+  location: string;
+  injuries: number;
+  fatalities: number;
+  economic_loss: string;
+  created_at: Date;
+}
+
 interface IncidentChartsProps {
+  incidents: Incident[]
   analysis: SafetyAnalysis | null
   incidentStats: {
     incidentsByType: { incident_type: string; count: number }[]
@@ -46,28 +61,50 @@ const SEVERITY_LABELS: Record<string, string> = {
   low: 'Низкая',
 }
 
-export function IncidentCharts({ analysis, incidentStats, isLoading }: IncidentChartsProps) {
-  const typeData = incidentStats?.incidentsByType?.map((item) => ({
-    name: item.incident_type,
-    value: Number(item.count),
-  })) || []
+export function IncidentCharts({ incidents, analysis, incidentStats, isLoading }: IncidentChartsProps) {
+  const typeData = incidents.reduce((acc, incident) => {
+    const type = incident.incident_type;
+    const existing = acc.find((item) => item.name === type);
+    if (existing) {
+      existing.value++;
+    } else {
+      acc.push({ name: type, value: 1 });
+    }
+    return acc;
+  }, [] as { name: string; value: number }[]);
 
-  const orgData = incidentStats?.incidentsByOrg?.slice(0, 6).map((item) => ({
-    name: item.organization.split(' ')[0],
-    fullName: item.organization,
-    incidents: Number(item.count),
-  })) || []
+  const orgData = incidents.reduce((acc, incident) => {
+    const org = incident.organization.split(' ')[0];
+    const existing = acc.find((item) => item.name === org);
+    if (existing) {
+      existing.incidents++;
+    } else {
+      acc.push({ name: org, fullName: incident.organization, incidents: 1 });
+    }
+    return acc;
+  }, [] as { name: string; fullName: string; incidents: number }[]).slice(0, 6);
 
-  const monthlyData = incidentStats?.incidentsByMonth?.map((item) => ({
-    month: item.month,
-    actual: Number(item.count),
-  })) || []
+  const monthlyData = incidents.reduce((acc, incident) => {
+    const month = incident.date.substring(0, 7);
+    const existing = acc.find((item) => item.month === month);
+    if (existing) {
+      existing.actual++;
+    } else {
+      acc.push({ month, actual: 1 });
+    }
+    return acc;
+  }, [] as { month: string; actual: number }[]);
 
-  const severityData = incidentStats?.incidentsBySeverity?.map((item) => ({
-    name: SEVERITY_LABELS[item.severity] || item.severity,
-    value: Number(item.count),
-    color: SEVERITY_COLORS[item.severity] || '#2563eb',
-  })) || []
+  const severityData = incidents.reduce((acc, incident) => {
+    const severity = SEVERITY_LABELS[incident.severity] || incident.severity;
+    const existing = acc.find((item) => item.name === severity);
+    if (existing) {
+      existing.value++;
+    } else {
+      acc.push({ name: severity, value: 1, color: SEVERITY_COLORS[incident.severity] || '#2563eb' });
+    }
+    return acc;
+  }, [] as { name: string; value: number; color: string }[]);
 
   const trendData = analysis?.trendAnalysis?.incidentTrendByMonth || monthlyData.map(m => ({
     month: m.month,

@@ -10,7 +10,8 @@ export const incidents = pgTable('incidents', {
   location: varchar('location', { length: 255 }),
   injuries: integer('injuries').default(0),
   fatalities: integer('fatalities').default(0),
-  economic_loss: decimal('economic_loss', { precision: 15, scale: 2 }).default('0'),
+  work_days_lost: integer('work_days_lost').default(0),
+  estimated_cost: decimal('estimated_cost', { precision: 15, scale: 2 }).default('0'),
   created_at: timestamp('created_at').defaultNow(),
 });
 

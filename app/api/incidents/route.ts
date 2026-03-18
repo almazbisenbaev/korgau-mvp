@@ -1,5 +1,31 @@
-import { sql } from '@/lib/db'
+import { getIncidents, sql } from '@/lib/db'
 import { NextResponse } from 'next/server'
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const organization = searchParams.get('organization') || undefined
+    const incident_type = searchParams.get('incident_type') || undefined
+    const startDate = searchParams.get('startDate') || undefined
+    const endDate = searchParams.get('endDate') || undefined
+
+    const incidents = await getIncidents({
+      organization,
+      incident_type,
+      startDate,
+      endDate,
+    })
+
+    return NextResponse.json(incidents)
+  } catch (error) {
+    console.error('Ошибка при получении инцидентов:', error)
+    return NextResponse.json(
+      { error: 'Не удалось получить инциденты' },
+      { status: 500 }
+    )
+  }
+}
+
 
 export async function POST(request: Request) {
   try {
