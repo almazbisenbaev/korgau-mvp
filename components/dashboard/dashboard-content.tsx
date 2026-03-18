@@ -11,6 +11,7 @@ import { Predictions } from '@/components/dashboard/predictions'
 import { Recommendations } from '@/components/dashboard/recommendations'
 import { KorgauAlerts } from '@/components/dashboard/korgau-alerts'
 import { Filters } from '@/components/dashboard/filters'
+import { IncidentForm } from '@/components/dashboard/incident-form'
 import type { SafetyAnalysis } from '@/app/api/analyze/route'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
@@ -24,7 +25,7 @@ export default function DashboardContent() {
     endDate: undefined as Date | undefined,
   })
 
-  const { data: dashboardData, isLoading: isDataLoading } = useSWR('/api/data', fetcher)
+  const { data: dashboardData, isLoading: isDataLoading, mutate: refreshDashboardData } = useSWR('/api/data', fetcher)
   const { data: analysis, isLoading: isAnalysisLoading, mutate: refreshAnalysis } = useSWR<SafetyAnalysis>(
     '/api/analyze',
     fetcher,
@@ -37,7 +38,8 @@ export default function DashboardContent() {
 
   const handleRefresh = useCallback(() => {
     refreshAnalysis()
-  }, [refreshAnalysis])
+    refreshDashboardData()
+  }, [refreshAnalysis, refreshDashboardData])
 
   const isLoading = isDataLoading || isAnalysisLoading
 
@@ -51,16 +53,19 @@ export default function DashboardContent() {
             <h1 className="text-sm font-semibold tracking-tight text-foreground">Korgau AI</h1>
           </div>
           
-          <Button
-            onClick={handleRefresh}
-            disabled={isLoading}
-            variant="outline"
-            size="sm"
-            className="gap-2 h-8"
-          >
-            <Sparkles className="h-3.5 w-3.5" />
-            {isLoading ? 'Анализ...' : 'Обновить данные'}
-          </Button>
+          <div className="flex items-center gap-2">
+            <IncidentForm onIncidentAdded={refreshDashboardData} />
+            <Button
+              onClick={handleRefresh}
+              disabled={isLoading}
+              variant="outline"
+              size="sm"
+              className="gap-2 h-8"
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              {isLoading ? 'Анализ...' : 'Обновить данные'}
+            </Button>
+          </div>
         </div>
       </header>
 

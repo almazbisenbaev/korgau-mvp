@@ -121,7 +121,8 @@ export async function GET() {
 - Открытых карт безопасности: ${korgauStats.openCards}`
 
     const { output } = await generateText({
-      model: google('gemini-3.1-flash-lite-preview'),
+      model: google('gemini-2.5-flash-lite'),
+      // model: google('gemini-3.1-flash-lite-preview'),
       output: Output.object({ schema: analysisSchema }),
       system: systemPrompt,
       prompt: `Проанализируйте эти данные по безопасности ОТ, ТБ и ООС и предоставьте комплексный анализ на РУССКОМ ЯЗЫКЕ:
