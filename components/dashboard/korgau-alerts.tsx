@@ -116,7 +116,7 @@ export function KorgauAlerts({ analysis, isLoading }: KorgauAlertsProps) {
               <Zap className="h-8 w-8 text-emerald-500" />
             </div>
             <h3 className="text-lg font-bold text-foreground">Нет активных уведомлений</h3>
-            <p className="max-w-[280px] text-sm text-muted-foreground">
+            <p className="max-w-70 text-sm text-muted-foreground">
               Все показатели безопасности находятся в пределах нормы.
             </p>
           </div>
@@ -137,7 +137,7 @@ export function KorgauAlerts({ analysis, isLoading }: KorgauAlertsProps) {
                         {getAlertTypeLabel(alert.alertType)}
                       </span>
                     </div>
-                    
+
                     <div>
                       <h4 className="font-bold text-foreground leading-tight mb-1">{alert.category}</h4>
                       <p className="text-sm text-muted-foreground">{alert.description}</p>

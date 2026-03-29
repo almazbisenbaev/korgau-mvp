@@ -12,6 +12,8 @@ export interface Incident {
   location: string
   injuries: number
   fatalities: number
+  estimated_cost: string | null
+  work_days_lost: number | null
   created_at: string
 }
 
@@ -31,34 +33,42 @@ export interface KorgauCard {
   created_at: string
 }
 
-export async function getIncidents(filters?: {
+interface IncidentFilters {
   organization?: string
   incident_type?: string
   startDate?: string
   endDate?: string
-}) {
-  let query = 'SELECT * FROM incidents WHERE 1=1'
-  const params: (string | undefined)[] = []
-  let paramIndex = 1
+}
+
+function buildIncidentFilterClause(filters?: IncidentFilters) {
+  const params: string[] = []
+  const conditions: string[] = []
 
   if (filters?.organization) {
-    query += ` AND organization = $${paramIndex++}`
     params.push(filters.organization)
+    conditions.push(`organization = $${params.length}`)
   }
   if (filters?.incident_type) {
-    query += ` AND incident_type = $${paramIndex++}`
     params.push(filters.incident_type)
+    conditions.push(`incident_type = $${params.length}`)
   }
   if (filters?.startDate) {
-    query += ` AND date >= $${paramIndex++}`
     params.push(filters.startDate)
+    conditions.push(`date >= $${params.length}`)
   }
   if (filters?.endDate) {
-    query += ` AND date <= $${paramIndex++}`
     params.push(filters.endDate)
+    conditions.push(`date <= $${params.length}`)
   }
 
-  query += ' ORDER BY date DESC'
+  const whereClause = conditions.length > 0 ? ` WHERE ${conditions.join(' AND ')}` : ''
+
+  return { whereClause, params }
+}
+
+export async function getIncidents(filters?: IncidentFilters) {
+  const { whereClause, params } = buildIncidentFilterClause(filters)
+  const query = `SELECT * FROM incidents${whereClause} ORDER BY date DESC`
 
   const result = await sql(query, params)
   return result as Incident[]
@@ -102,29 +112,37 @@ export async function getKorgauCards(filters?: {
   return result as KorgauCard[]
 }
 
-export async function getIncidentStats() {
+export async function getIncidentStats(filters?: IncidentFilters) {
+  const { whereClause, params } = buildIncidentFilterClause(filters)
+
   const [
     totalIncidents,
     totalInjuries,
     totalFatalities,
+    totalWorkDaysLost,
+    totalCost,
     incidentsByType,
     incidentsByOrg,
     incidentsByMonth,
     incidentsBySeverity
   ] = await Promise.all([
-    sql`SELECT COUNT(*) as count FROM incidents`,
-    sql`SELECT COALESCE(SUM(injuries), 0) as total FROM incidents`,
-    sql`SELECT COALESCE(SUM(fatalities), 0) as total FROM incidents`,
-    sql`SELECT incident_type, COUNT(*) as count FROM incidents GROUP BY incident_type ORDER BY count DESC`,
-    sql`SELECT organization, COUNT(*) as count FROM incidents GROUP BY organization ORDER BY count DESC`,
-    sql`SELECT TO_CHAR(date, 'YYYY-MM') as month, COUNT(*) as count FROM incidents GROUP BY TO_CHAR(date, 'YYYY-MM') ORDER BY month`,
-    sql`SELECT severity, COUNT(*) as count FROM incidents GROUP BY severity`
+    sql(`SELECT COUNT(*) as count FROM incidents${whereClause}`, params),
+    sql(`SELECT COALESCE(SUM(injuries), 0) as total FROM incidents${whereClause}`, params),
+    sql(`SELECT COALESCE(SUM(fatalities), 0) as total FROM incidents${whereClause}`, params),
+    sql(`SELECT COALESCE(SUM(COALESCE((to_jsonb(incidents)->>'work_days_lost')::numeric, 0)), 0) as total FROM incidents${whereClause}`, params),
+    sql(`SELECT COALESCE(SUM(COALESCE((to_jsonb(incidents)->>'estimated_cost')::numeric, (to_jsonb(incidents)->>'economic_loss')::numeric, 0)), 0) as total FROM incidents${whereClause}`, params),
+    sql(`SELECT incident_type, COUNT(*) as count FROM incidents${whereClause} GROUP BY incident_type ORDER BY count DESC`, params),
+    sql(`SELECT organization, COUNT(*) as count FROM incidents${whereClause} GROUP BY organization ORDER BY count DESC`, params),
+    sql(`SELECT TO_CHAR(date, 'YYYY-MM') as month, COUNT(*) as count FROM incidents${whereClause} GROUP BY TO_CHAR(date, 'YYYY-MM') ORDER BY month`, params),
+    sql(`SELECT severity, COUNT(*) as count FROM incidents${whereClause} GROUP BY severity`, params)
   ])
 
   return {
     totalIncidents: Number(totalIncidents[0]?.count ?? 0),
     totalInjuries: Number(totalInjuries[0]?.total ?? 0),
     totalFatalities: Number(totalFatalities[0]?.total ?? 0),
+    totalWorkDaysLost: Number(totalWorkDaysLost[0]?.total ?? 0),
+    totalCostTenge: Number(totalCost[0]?.total ?? 0),
     incidentsByType: (incidentsByType as any[]).map(i => ({ ...i, count: Number(i.count) })),
     incidentsByOrg: (incidentsByOrg as any[]).map(i => ({ ...i, count: Number(i.count) })),
     incidentsByMonth: (incidentsByMonth as any[]).map(i => ({ ...i, count: Number(i.count) })),

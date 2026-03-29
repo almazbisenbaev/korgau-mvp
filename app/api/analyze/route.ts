@@ -7,6 +7,13 @@ const google = createGoogleGenerativeAI({
 })
 import { getIncidents, getKorgauCards, getIncidentStats, getKorgauStats } from '@/lib/db'
 
+function getFilterValue(value: string | null) {
+  if (!value || value === 'all') {
+    return undefined
+  }
+  return value
+}
+
 const analysisSchema = z.object({
   summary: z.object({
     totalIncidents: z.number(),
@@ -81,12 +88,20 @@ const analysisSchema = z.object({
 
 export type SafetyAnalysis = z.infer<typeof analysisSchema>
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url)
+    const incidentFilters = {
+      organization: getFilterValue(searchParams.get('organization')),
+      incident_type: getFilterValue(searchParams.get('incident_type')),
+      startDate: getFilterValue(searchParams.get('startDate')),
+      endDate: getFilterValue(searchParams.get('endDate')),
+    }
+
     const [incidents, korgauCards, incidentStats, korgauStats] = await Promise.all([
-      getIncidents(),
+      getIncidents(incidentFilters),
       getKorgauCards(),
-      getIncidentStats(),
+      getIncidentStats(incidentFilters),
       getKorgauStats(),
     ])
 
@@ -102,7 +117,7 @@ export async function GET() {
 твоя задача — проанализировать данные по безопасности и предоставить практические выводы.
 
 ВАЖНЫЕ ИНСТРУКЦИИ:
-1. Тщательно проанализируй предоставленные данные об инцидентах и картах Korgau.
+1. Тщательно проанализируй предоставленные данные об инцидентах и картах Qorgau.
 2. Рассчитайте реалистичные прогнозы на основе исторических трендов.
 3. Выявите систематические закономерности в нарушениях безопасности.
 4. Предоставьте конкретные, выполнимые рекомендации.
@@ -117,7 +132,7 @@ export async function GET() {
 - Смертельных случаев: ${incidentStats.totalFatalities}
 - Потеряно рабочих дней: ${incidentStats.totalWorkDaysLost}
 - Общая стоимость: ${incidentStats.totalCost} KZT
-- Всего наблюдений Korgau: ${korgauStats.totalCards}
+- Всего наблюдений Qorgau: ${korgauStats.totalCards}
 - Открытых карт безопасности: ${korgauStats.openCards}`
 
     const { output } = await generateText({
@@ -134,7 +149,7 @@ ${JSON.stringify(dataSnapshot, null, 2)}
 2. Прогнозы инцидентов на 3, 6 и 12 месяцев с доверительными интервалами.
 3. Топ-5 зон риска (организаций) с оценками вероятности.
 4. Минимум 3 конкретные рекомендации по безопасности.
-5. Уведомления Korgau о систематических нарушениях.
+5. Уведомления Qorgau о систематических нарушениях.
 6. Анализ трендов с ежемесячными данными.`,
     })
 

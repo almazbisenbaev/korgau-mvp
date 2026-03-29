@@ -1,13 +1,20 @@
 import { getIncidents, sql } from '@/lib/db'
 import { NextResponse } from 'next/server'
 
+function getFilterValue(value: string | null) {
+  if (!value || value === 'all') {
+    return undefined
+  }
+  return value
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
-    const organization = searchParams.get('organization') || undefined
-    const incident_type = searchParams.get('incident_type') || undefined
-    const startDate = searchParams.get('startDate') || undefined
-    const endDate = searchParams.get('endDate') || undefined
+    const organization = getFilterValue(searchParams.get('organization'))
+    const incident_type = getFilterValue(searchParams.get('incident_type'))
+    const startDate = getFilterValue(searchParams.get('startDate'))
+    const endDate = getFilterValue(searchParams.get('endDate'))
 
     const incidents = await getIncidents({
       organization,
@@ -30,16 +37,16 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { 
-      date, 
-      organization, 
-      incident_type, 
-      description, 
-      severity, 
-      location, 
-      injuries, 
-      fatalities, 
-      economic_loss 
+    const {
+      date,
+      organization,
+      incident_type,
+      description,
+      severity,
+      location,
+      injuries,
+      fatalities,
+      economic_loss
     } = body
 
     if (!date || !organization || !incident_type || !severity) {

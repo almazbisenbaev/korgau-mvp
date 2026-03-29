@@ -1,15 +1,15 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { 
-  AlertTriangle, 
-  Users, 
-  DollarSign, 
-  Heart, 
-  TrendingDown, 
-  Shield, 
-  Clock, 
-  FileText 
+import {
+  AlertTriangle,
+  Users,
+  DollarSign,
+  Heart,
+  TrendingDown,
+  Shield,
+  Clock,
+  FileText
 } from 'lucide-react'
 import type { SafetyAnalysis } from '@/app/api/analyze/route'
 
@@ -19,6 +19,8 @@ interface KPICardsProps {
     totalIncidents: number
     totalInjuries: number
     totalFatalities: number
+    totalWorkDaysLost?: number
+    totalCostTenge?: number
   } | null
   isLoading: boolean
 }
@@ -66,7 +68,7 @@ export function KPICards({ analysis, incidentStats, isLoading }: KPICardsProps) 
     },
     {
       title: 'Потерянные дни',
-      value: analysis?.summary?.totalWorkDaysLost || 0,
+      value: incidentStats?.totalWorkDaysLost ?? (analysis?.summary?.totalWorkDaysLost || 0),
       icon: Clock,
       color: 'text-amber-600',
       bgColor: 'bg-amber-50',
@@ -104,7 +106,7 @@ export function KPICards({ analysis, incidentStats, isLoading }: KPICardsProps) 
     },
     {
       title: 'Общий ущерб',
-      value: analysis?.summary?.totalCostTenge || 0,
+      value: incidentStats?.totalCostTenge ?? (analysis?.summary?.totalCostTenge || 0),
       icon: TrendingDown,
       color: 'text-red-600',
       bgColor: 'bg-red-50',
@@ -152,7 +154,7 @@ export function KPICards({ analysis, incidentStats, isLoading }: KPICardsProps) 
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <Heart className="h-5 w-5 text-emerald-400" />
-            Economic Effect
+            Экономический эффект
           </CardTitle>
         </CardHeader>
         <CardContent>

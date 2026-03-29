@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { CalendarIcon, Filter, RefreshCw } from 'lucide-react'
+import { CalendarIcon, RefreshCw } from 'lucide-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { cn } from '@/lib/utils'
@@ -32,12 +32,12 @@ export function Filters({
   isLoading,
 }: FiltersProps) {
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="grid w-full grid-cols-1 gap-2 sm:flex sm:flex-wrap sm:items-center">
       <Select
         value={filters.organization}
         onValueChange={(value) => onFilterChange('organization', value)}
       >
-        <SelectTrigger className="h-8 w-[160px] border-border bg-background text-xs font-medium hover:bg-muted/50 transition-colors">
+        <SelectTrigger className="h-8 w-full border-border bg-background text-xs font-medium transition-colors hover:bg-muted/50 sm:w-45">
           <SelectValue placeholder="Организация" />
         </SelectTrigger>
         <SelectContent>
@@ -54,7 +54,7 @@ export function Filters({
         value={filters.incidentType}
         onValueChange={(value) => onFilterChange('incidentType', value)}
       >
-        <SelectTrigger className="h-8 w-[140px] border-border bg-background text-xs font-medium hover:bg-muted/50 transition-colors">
+        <SelectTrigger className="h-8 w-full border-border bg-background text-xs font-medium transition-colors hover:bg-muted/50 sm:w-40">
           <SelectValue placeholder="Тип инцидента" />
         </SelectTrigger>
         <SelectContent>
@@ -73,7 +73,7 @@ export function Filters({
             variant="outline"
             size="sm"
             className={cn(
-              'h-8 w-[130px] justify-start border-border bg-background text-left text-xs font-medium hover:bg-muted/50 transition-colors',
+              'h-8 w-full justify-start border-border bg-background text-left text-xs font-medium transition-colors hover:bg-muted/50 sm:w-40',
               !filters.startDate && 'text-muted-foreground'
             )}
           >
@@ -98,7 +98,7 @@ export function Filters({
             variant="outline"
             size="sm"
             className={cn(
-              'h-8 w-[130px] justify-start border-border bg-background text-left text-xs font-medium hover:bg-muted/50 transition-colors',
+              'h-8 w-full justify-start border-border bg-background text-left text-xs font-medium transition-colors hover:bg-muted/50 sm:w-40',
               !filters.endDate && 'text-muted-foreground'
             )}
           >
@@ -122,7 +122,7 @@ export function Filters({
         size="icon"
         onClick={onRefresh}
         disabled={isLoading}
-        className="h-8 w-8 border-border bg-background hover:bg-muted/50 transition-colors"
+        className="h-8 w-full border-border bg-background transition-colors hover:bg-muted/50 sm:w-8"
       >
         <RefreshCw className={cn('h-3.5 w-3.5', isLoading && 'animate-spin')} />
       </Button>
